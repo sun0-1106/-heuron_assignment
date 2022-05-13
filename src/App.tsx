@@ -2,6 +2,7 @@ import './App.css';
 import { Route, Routes } from 'react-router-dom';
 import ListPage from './pages/ListPage';
 import DetailPage from './pages/DetailPage';
+
 function App() {
   return (
     <div>
