@@ -57,10 +57,12 @@ const DetailPage = () => {
   };
 
   const getArts = () => {
-    let datas = localStorage.getItem('arts');
-    console.log(datas);
-    //setArts(datas)
+    let datas: string = localStorage.getItem('arts')!;
+    let parsed = JSON.parse(datas);
+    setArts(parsed);
+    setIsLoading(false);
   };
+
   useEffect(() => {
     getArts();
   }, []);
@@ -76,10 +78,12 @@ const DetailPage = () => {
         뒤로 가기
       </Button>
       <Box>
-        {arts.length > 0 ? (
+        {arts.length > 0 && !isLoading ? (
           arts.map(art => {
             return <Art key={art.id} src={art.download_url} />;
           })
+        ) : isLoading ? (
+          <Loading />
         ) : (
           <div>받아온 데이터 없음</div>
         )}
