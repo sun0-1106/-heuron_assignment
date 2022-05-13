@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../components/Loading';
+import axios from 'axios';
 
 const Container = styled.div`
   width: 1200px;
@@ -25,9 +25,19 @@ const Art = styled.img`
   object-fit: cover;
 `;
 
+interface obj {
+  author?: string;
+  download_url?: string;
+  height?: number;
+  id?: string;
+  url?: string;
+  width?: number;
+}
+
 const Listpage = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [arts, setArts] = useState<obj[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   const navigate = useNavigate();
 
   const getData = async () => {
@@ -36,29 +46,20 @@ const Listpage = () => {
       if (res) {
         setIsLoading(false);
         setArts(res.data);
-        console.log(arts);
+        localStorage.setItem('arts', JSON.stringify(res.data));
       }
     } catch (err) {
       console.log(err);
     }
   };
 
-  const goToDetail = () => {
-    navigate(`/detail`);
-  };
-
   useEffect(() => {
     getData();
   }, []);
 
-  interface obj {
-    author?: string;
-    download_url?: string;
-    height?: number;
-    id?: string;
-    url?: string;
-    width?: number;
-  }
+  const goToDetail = () => {
+    navigate(`/detail`);
+  };
 
   return (
     <Container>
