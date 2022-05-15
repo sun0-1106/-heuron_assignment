@@ -2,7 +2,8 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import Loading from '../components/Loading';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { setTarget } from '../redux/slice';
 import { RootState } from '../redux/store';
 import Canvas from '../components/Canvas';
 
@@ -35,11 +36,6 @@ const Box = styled.div`
   height: 700px;
   border: 1px solid green;
 `;
-const Art = styled.img`
-  width: 300px;
-  object-fit: cover;
-  opacity: 0.2;
-`;
 
 interface obj {
   author?: string;
@@ -55,6 +51,7 @@ const DetailPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { target, targetId } = useSelector((state: RootState) => state.target);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const goToList = () => {
     navigate(`/`);
@@ -67,14 +64,28 @@ const DetailPage = () => {
     setIsLoading(false);
   };
 
+  const handleOnWheel = () => {
+    for (let art of arts) {
+      if (art.id === target.id) {
+        let indexNow = arts.indexOf(target);
+        if (indexNow === arts.length - 1) {
+          dispatch(setTarget(arts[0]));
+        } else {
+          let newTarget = arts[indexNow + 1];
+          dispatch(setTarget(newTarget));
+        }
+      }
+    }
+  };
+
   useEffect(() => {
     getArts();
   }, []);
 
   return (
-    <Container>
+    <Container onWheel={handleOnWheel}>
       <Title>Detail Page</Title>
-      <Explain>마우스 휠을 위아래로 움직여보세요</Explain>
+      <Explain>마우스 휠을 움직여보세요</Explain>
       <Button
         onClick={() => {
           goToList();
@@ -87,8 +98,6 @@ const DetailPage = () => {
           arts.map(art => {
             if (art.download_url === target.download_url) {
               return <Canvas key={art.id} targetUrl={art.download_url!} />;
-            } else {
-              return <Art key={art.id} src={art.download_url} />;
             }
           })
         ) : isLoading ? (

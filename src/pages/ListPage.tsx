@@ -42,7 +42,6 @@ const Listpage = () => {
   const [arts, setArts] = useState<obj[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [targetLocal, setTargetLocal] = useState<obj>({});
-  const { target, targetId } = useSelector((state: RootState) => state.target);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
