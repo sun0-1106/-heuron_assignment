@@ -69,7 +69,6 @@ const Listpage = () => {
       dispatch(setTarget(targetLocal));
     }, 150);
     setTimeout(() => {
-      console.log('첫렌더링엔 안떠야함');
       navigate(`/detail`);
     }, 200);
   }, [targetLocal]);
@@ -77,7 +76,6 @@ const Listpage = () => {
   const handleChangeTargetLocal = (el: obj) => {
     let copied = Object.assign({}, el);
     setTargetLocal(copied);
-    //navigate(`/detail`);
   };
 
   return (
@@ -92,14 +90,9 @@ const Listpage = () => {
             <Art
               src={el.download_url}
               alt='작품 사진'
-              onClick={
-                () => {
-                  handleChangeTargetLocal(el);
-                  //console.log(target);
-                }
-                //const change = e.target as HTMLImageElement;
-                //goToDetail(change.src);
-              }
+              onClick={() => {
+                handleChangeTargetLocal(el);
+              }}
             ></Art>
           </Box>
         ))

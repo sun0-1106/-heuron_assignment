@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Loading from '../components/Loading';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
+import Canvas from '../components/Canvas';
 
 const Container = styled.div`
   position: absolute;
@@ -27,6 +28,8 @@ const Button = styled.button`
 `;
 const Box = styled.div`
   position: relative;
+  display: flex;
+  flex-direction: column;
   top: 50px;
   width: 750px;
   height: 700px;
@@ -35,12 +38,9 @@ const Box = styled.div`
 const Art = styled.img`
   width: 300px;
   object-fit: cover;
+  opacity: 0.2;
 `;
-const SelectedArt = styled.img`
-  width: 300px;
-  object-fit: cover;
-  border: 3px solid red;
-`;
+
 interface obj {
   author?: string;
   download_url?: string;
@@ -54,12 +54,6 @@ const DetailPage = () => {
   const [arts, setArts] = useState<obj[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { target, targetId } = useSelector((state: RootState) => state.target);
-  // 불러온 이미지 목록중 canvas를 통해 1개의 이미지만 표시되게 처리
-  //마우스 휠 이벤트에 따라 canvas에 이미지가 순차적으로 표시되어야함
-  //마우스(왼쪽 클릭+ 드래그) 이벤트 발생시 이미지 확대/축소
-  //마우스(오른쪽 클릭 + 드래그) 이벤트 발생시 이미지 회전
-
-  //일단 상세화면에서 누른 이미지 하나만 보이게 만들어야함
   const navigate = useNavigate();
 
   const goToList = () => {
@@ -75,7 +69,6 @@ const DetailPage = () => {
 
   useEffect(() => {
     getArts();
-    console.log('디테일페이지 타겟', target);
   }, []);
 
   return (
@@ -93,7 +86,7 @@ const DetailPage = () => {
         {arts.length > 0 && !isLoading ? (
           arts.map(art => {
             if (art.download_url === target.download_url) {
-              return <SelectedArt key={art.id} src={art.download_url} />;
+              return <Canvas key={art.id} targetUrl={art.download_url!} />;
             } else {
               return <Art key={art.id} src={art.download_url} />;
             }
