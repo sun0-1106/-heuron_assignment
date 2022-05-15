@@ -3,6 +3,10 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../components/Loading';
 import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux';
+import { setTarget } from '../redux/slice';
+import { RootState } from '../redux/store';
+import useDidMountEffect from '../components/UseDidMountEffect';
 
 const Container = styled.div`
   width: 1200px;
@@ -37,8 +41,11 @@ interface obj {
 const Listpage = () => {
   const [arts, setArts] = useState<obj[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [targetLocal, setTargetLocal] = useState<obj>({});
+  const { target, targetId } = useSelector((state: RootState) => state.target);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const getData = async () => {
     try {
@@ -57,8 +64,20 @@ const Listpage = () => {
     getData();
   }, []);
 
-  const goToDetail = () => {
-    navigate(`/detail`);
+  useDidMountEffect(() => {
+    setTimeout(() => {
+      dispatch(setTarget(targetLocal));
+    }, 150);
+    setTimeout(() => {
+      console.log('첫렌더링엔 안떠야함');
+      navigate(`/detail`);
+    }, 200);
+  }, [targetLocal]);
+
+  const handleChangeTargetLocal = (el: obj) => {
+    let copied = Object.assign({}, el);
+    setTargetLocal(copied);
+    //navigate(`/detail`);
   };
 
   return (
@@ -72,9 +91,15 @@ const Listpage = () => {
             <div>{el.author}</div>
             <Art
               src={el.download_url}
-              onClick={() => {
-                goToDetail();
-              }}
+              alt='작품 사진'
+              onClick={
+                () => {
+                  handleChangeTargetLocal(el);
+                  //console.log(target);
+                }
+                //const change = e.target as HTMLImageElement;
+                //goToDetail(change.src);
+              }
             ></Art>
           </Box>
         ))

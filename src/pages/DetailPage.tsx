@@ -2,6 +2,8 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import Loading from '../components/Loading';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
 
 const Container = styled.div`
   position: absolute;
@@ -10,7 +12,11 @@ const Container = styled.div`
   border: 1px solid pink;
 `;
 const Title = styled.div`
+  font-size: 1.5rem;
   font-weight: 550;
+`;
+const Explain = styled.div`
+  font-weight: 500;
 `;
 const Button = styled.button`
   position: absolute;
@@ -30,7 +36,11 @@ const Art = styled.img`
   width: 300px;
   object-fit: cover;
 `;
-
+const SelectedArt = styled.img`
+  width: 300px;
+  object-fit: cover;
+  border: 3px solid red;
+`;
 interface obj {
   author?: string;
   download_url?: string;
@@ -43,7 +53,7 @@ interface obj {
 const DetailPage = () => {
   const [arts, setArts] = useState<obj[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-
+  const { target, targetId } = useSelector((state: RootState) => state.target);
   // 불러온 이미지 목록중 canvas를 통해 1개의 이미지만 표시되게 처리
   //마우스 휠 이벤트에 따라 canvas에 이미지가 순차적으로 표시되어야함
   //마우스(왼쪽 클릭+ 드래그) 이벤트 발생시 이미지 확대/축소
@@ -65,11 +75,13 @@ const DetailPage = () => {
 
   useEffect(() => {
     getArts();
+    console.log('디테일페이지 타겟', target);
   }, []);
 
   return (
     <Container>
       <Title>Detail Page</Title>
+      <Explain>마우스 휠을 위아래로 움직여보세요</Explain>
       <Button
         onClick={() => {
           goToList();
@@ -80,7 +92,11 @@ const DetailPage = () => {
       <Box>
         {arts.length > 0 && !isLoading ? (
           arts.map(art => {
-            return <Art key={art.id} src={art.download_url} />;
+            if (art.download_url === target.download_url) {
+              return <SelectedArt key={art.id} src={art.download_url} />;
+            } else {
+              return <Art key={art.id} src={art.download_url} />;
+            }
           })
         ) : isLoading ? (
           <Loading />
