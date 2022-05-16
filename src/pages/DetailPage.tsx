@@ -8,14 +8,21 @@ import { RootState } from '../redux/store';
 import Canvas from '../components/Canvas';
 
 const Container = styled.div`
-  position: absolute;
   width: 900px;
-  height: 850px;
-  border: 1px solid pink;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+`;
+const TitleBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 `;
 const Title = styled.div`
+  font-weight: 600;
   font-size: 1.5rem;
-  font-weight: 550;
+  padding-bottom: 10px;
 `;
 const Explain = styled.div`
   font-weight: 500;
@@ -26,15 +33,19 @@ const Button = styled.button`
   width: 80px;
   height: 40px;
   font-weight: 500;
+  background-color: #5a5a5a;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  margin-top: 10px;
+  margin-right: 10px;
 `;
 const Box = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  top: 50px;
-  width: 750px;
+  width: 100%;
   height: 700px;
-  border: 1px solid green;
 `;
 
 interface obj {
@@ -49,7 +60,7 @@ interface obj {
 const DetailPage = () => {
   const [arts, setArts] = useState<obj[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const { target, targetId } = useSelector((state: RootState) => state.target);
+  const { target } = useSelector((state: RootState) => state.target);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -84,15 +95,17 @@ const DetailPage = () => {
 
   return (
     <Container onWheel={handleOnWheel}>
-      <Title>Detail Page</Title>
-      <Explain>마우스 휠을 움직여보세요</Explain>
-      <Button
-        onClick={() => {
-          goToList();
-        }}
-      >
-        뒤로 가기
-      </Button>
+      <TitleBox>
+        <Title>Detail Page</Title>
+        <Explain>마우스 휠을 움직여보세요</Explain>
+        <Button
+          onClick={() => {
+            goToList();
+          }}
+        >
+          뒤로 가기
+        </Button>
+      </TitleBox>
       <Box>
         {arts.length > 0 && !isLoading ? (
           arts.map(art => {
