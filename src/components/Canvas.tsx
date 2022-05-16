@@ -9,7 +9,6 @@ const Container = styled.div`
   height: 100%;
   position: absolute;
   object-fit: cover;
-  border: 1px solid green;
   #canvas {
     width: 400px;
     height: 400px;
@@ -69,6 +68,14 @@ const Canvas = ({ targetUrl }: { targetUrl: string }) => {
     if (!isClicked) {
       return;
     }
+    const canvas: any = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    const image = new Image();
+    image.src = targetUrl;
+    image.onload = () => {
+      ctx?.drawImage(image, 0, 0, 300, 300);
+    };
+
     const currentX = event.nativeEvent.offsetX;
     const currentY = event.nativeEvent.offsetY;
 
@@ -105,6 +112,36 @@ const Canvas = ({ targetUrl }: { targetUrl: string }) => {
     }
     setItemBoxes([...cloneBoxes]);
     setIsClicked(false);
+    // 왼쪽으로 드래그 : 이미지 확대/ 축소
+    let lastBox = itemBoxes[itemBoxes.length - 1];
+
+    const canvas: any = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    const image = new Image();
+    image.src = targetUrl;
+    image.onload = () => {
+      ctx?.drawImage(
+        image,
+        lastBox.x,
+        lastBox.y,
+        lastBox.width,
+        lastBox.height,
+      );
+    };
+    //오른쪽으로 드래그 : 이미지 회전
+    if (isRightClicked) {
+      ctx.rotate(90);
+      image.onload = () => {
+        ctx?.drawImage(
+          image,
+          lastBox.x,
+          lastBox.y,
+          lastBox.width,
+          lastBox.height,
+        );
+      };
+      setIsRightClicked(false);
+    }
   };
 
   //캔버스 영역에서 나갈 때
@@ -131,25 +168,28 @@ const Canvas = ({ targetUrl }: { targetUrl: string }) => {
     }
   }, [ctx, itemBoxes]);
 
-  /* const handleRightClick = () => {
-    //마우스(오른쪽 클릭 + 드래그) 이벤트 발생시 이미지 회전
-    console.log('우클릭');
-    //beginPath로 새로운 경로 만들고
-    //closePath로 경로와연결된 직선 추가
-  }; */
+  const handleRightClick = (event: React.MouseEvent<HTMLElement>) => {
+    setIsRightClicked(true);
+    event.preventDefault();
+  };
 
   return (
     <Container>
-      <canvas
-        id='canvas'
-        width='300'
-        height='300'
-        ref={canvasRef}
-        onMouseDown={onMouseDown}
-        onMouseMove={onMouseMove}
-        onMouseUp={onMouseUp}
-        onMouseOut={onMouseOut}
-      ></canvas>
+      {targetUrl ? (
+        <canvas
+          id='canvas'
+          width='300'
+          height='300'
+          ref={canvasRef}
+          onMouseDown={onMouseDown}
+          onMouseMove={onMouseMove}
+          onMouseUp={onMouseUp}
+          onMouseOut={onMouseOut}
+          onContextMenu={handleRightClick}
+        ></canvas>
+      ) : (
+        <p>이미지를 다시 선택해주세요</p>
+      )}
     </Container>
   );
 };

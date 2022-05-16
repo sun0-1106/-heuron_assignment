@@ -6,16 +6,23 @@ import { HashRouter } from 'react-router-dom';
 //redux
 import { store } from './redux/store';
 import { Provider } from 'react-redux';
+//persist
+import { persistStore } from 'redux-persist';
+import { PersistGate } from 'redux-persist/lib/integration/react';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
 );
 
+const persistor = persistStore(store);
+
 root.render(
   <Provider store={store}>
-    <HashRouter>
-      <App />
-    </HashRouter>
+    <PersistGate persistor={persistor}>
+      <HashRouter>
+        <App />
+      </HashRouter>
+    </PersistGate>
   </Provider>,
 );
 
