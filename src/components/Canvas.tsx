@@ -95,6 +95,7 @@ const Canvas = ({ targetUrl }: { targetUrl: string }) => {
     cloneBoxes.pop();
     setItemBoxes([...cloneBoxes]);
     setIsClicked(false);
+    setIsRightClicked(false);
   };
 
   //마우스 뗄 때 (그리기 끝)
@@ -111,23 +112,25 @@ const Canvas = ({ targetUrl }: { targetUrl: string }) => {
       return;
     }
     setItemBoxes([...cloneBoxes]);
-    setIsClicked(false);
-    // 왼쪽으로 드래그 : 이미지 확대/ 축소
     let lastBox = itemBoxes[itemBoxes.length - 1];
 
     const canvas: any = canvasRef.current;
     const ctx = canvas.getContext('2d');
     const image = new Image();
-    image.src = targetUrl;
-    image.onload = () => {
-      ctx?.drawImage(
-        image,
-        lastBox.x,
-        lastBox.y,
-        lastBox.width,
-        lastBox.height,
-      );
-    };
+    // 왼쪽으로 드래그 : 이미지 확대/ 축소
+    if (isClicked) {
+      image.src = targetUrl;
+      image.onload = () => {
+        ctx?.drawImage(
+          image,
+          lastBox.x,
+          lastBox.y,
+          lastBox.width,
+          lastBox.height,
+        );
+      };
+      setIsClicked(false);
+    }
     //오른쪽으로 드래그 : 이미지 회전
     if (isRightClicked) {
       ctx.rotate(90);
@@ -146,7 +149,7 @@ const Canvas = ({ targetUrl }: { targetUrl: string }) => {
 
   //캔버스 영역에서 나갈 때
   const onMouseOut = () => {
-    if (isClicked) cancelDraw();
+    if (isClicked || isRightClicked) cancelDraw();
   };
 
   useEffect(() => {
