@@ -1,30 +1,30 @@
 ### 실행방법
 
-npm install
+npm install<br>
 npm run start
 
 ### 프로젝트 구조
 
-📦src
-┣ 📂components
-┃ ┣ 📜Canvas.tsx
-┃ ┣ 📜Loading.tsx
-┃ ┗ 📜UseDidMountEffect.ts
-┣ 📂pages
-┃ ┣ 📜DetailPage.tsx
-┃ ┗ 📜ListPage.tsx
-┣ 📂redux
-┃ ┣ 📜slice.ts
-┃ ┗ 📜store.ts
-┣ 📜App.css
-┣ 📜App.test.tsx
-┣ 📜App.tsx
-┣ 📜index.css
-┣ 📜index.tsx
-┣ 📜logo.svg
-┣ 📜react-app-env.d.ts
-┣ 📜reportWebVitals.ts
-┗ 📜setupTests.ts
+📦src<br>
+┣ 📂components<br>
+┃ ┣ 📜Canvas.tsx<br>
+┃ ┣ 📜Loading.tsx<br>
+┃ ┗ 📜UseDidMountEffect.ts<br>
+┣ 📂pages<br>
+┃ ┣ 📜DetailPage.tsx<br>
+┃ ┗ 📜ListPage.tsx<br>
+┣ 📂redux<br>
+┃ ┣ 📜slice.ts<br>
+┃ ┗ 📜store.ts<br>
+┣ 📜App.css<br>
+┣ 📜App.test.tsx<br>
+┣ 📜App.tsx<br>
+┣ 📜index.css<br>
+┣ 📜index.tsx<br>
+┣ 📜logo.svg<br>
+┣ 📜react-app-env.d.ts<br>
+┣ 📜reportWebVitals.ts<br>
+┗ 📜setupTests.ts<br>
 
 ### 라이브러리 사용 이유
 
@@ -38,7 +38,7 @@ npm run start
 List page의 return 부분에서 삼항 연산자를 사용할지, if/else 문을 사용할지
 어떻게 써야 더욱 깔끔하게 코드로 나타낼 수 있을까 고민했습니다.<br>
 
-useEffect가 mount시에 작동이 안되고 state가 변경될 때에만 작동하도록 customHook을 만들었습니다.
+useEffect가 mount시에 작동이 안되고 state가 변경될 때에만 작동하도록 customHook을 만들었습니다.<br>
 <br>
 canvas에서 드래그를 하면 이미지가 사라져서 다시 나타나게 하는 방법을 고민했습니다.<br>
 이미지가 나타난다면 scale을 사용해서 이미지를 확대시키고, rotate를 사용해서 회전 시킬 수 있을 것 입니다.
